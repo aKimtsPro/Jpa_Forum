@@ -1,8 +1,14 @@
 package be.tftic.java.forum.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.List;
 
 @Entity
+@Table(name = "\"user\"")
+@Getter @Setter
 public class User {
 
     @Id
@@ -22,28 +28,23 @@ public class User {
     @Column( name = "user_password", nullable = false)
     private String password;
 
+    @ElementCollection
+    private List<String> alias;
 
-    public long getId() {
-        return id;
-    }
+    @Enumerated(EnumType.STRING)
+    @ElementCollection
+    private List<TopicCategory> favoriteCategories;
 
-    public void setId(long id) {
-        this.id = id;
-    }
+//    @Embedded
+    private Address address;
 
-    public String getUsername() {
-        return username;
-    }
+    @OneToMany(mappedBy = "createdBy")
+    private List<Topic> createdTopics;
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+    @ManyToMany
+    private List<Topic> followedTopics;
 
-    public String getPassword() {
-        return password;
-    }
+    @OneToOne(mappedBy = "user")
+    private Admin admin;
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
 }
