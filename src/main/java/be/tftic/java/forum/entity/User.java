@@ -3,12 +3,14 @@ package be.tftic.java.forum.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.List;
 
 @Entity
 @Table(name = "\"user\"")
 @Getter @Setter
+@ToString
 public class User {
 
     @Id
@@ -42,9 +44,16 @@ public class User {
     private List<Topic> createdTopics;
 
     @ManyToMany
+    @JoinTable(
+            name = "followed_topics",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "topic_id")
+    )
     private List<Topic> followedTopics;
 
     @OneToOne(mappedBy = "user")
     private Admin admin;
+
+
 
 }

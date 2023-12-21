@@ -12,6 +12,7 @@ public class Address {
 
     @Column(name = "address_number")
     private int number;
+    @Column(name = "address_street")
     private String street;
     private int zipcode;
     private String city;
