@@ -26,21 +26,36 @@ public class UserDAO implements CrudDAO<User, Long> {
 
     @Override
     public List<User> getAll() {
-        return null;
+        EntityManager em = entityManagerFactory.createEntityManager();
+        return em.createQuery("SELECT u FROM User u", User.class).getResultList();
     }
 
     @Override
-    public Optional<User> getOne(Long aLong) {
-        return Optional.empty();
+    public Optional<User> getOne(Long id) {
+        EntityManager em = entityManagerFactory.createEntityManager();
+        return Optional.ofNullable( em.find(User.class, id) );
     }
 
     @Override
-    public void update(Long aLong, User entity) {
-
+    public void update(Long id, User entity) {
+        EntityManager em = entityManagerFactory.createEntityManager();
+        entity.setId(id);
+        em.getTransaction().begin();
+        em.merge(entity);
+        em.getTransaction().commit();
+        em.close();
     }
 
     @Override
-    public Optional<User> delete(Long aLong) {
-        return Optional.empty();
+    public Optional<User> delete(Long id) {
+        EntityManager em = entityManagerFactory.createEntityManager();
+        User toDelete = em.find(User.class, id);
+        if( toDelete != null ){
+            em.getTransaction().begin();
+            em.remove(toDelete);
+            em.getTransaction().commit();
+        }
+        em.close();
+        return Optional.ofNullable( toDelete );
     }
 }
